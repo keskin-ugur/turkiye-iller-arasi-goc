@@ -1,6 +1,6 @@
 # ============================================================
 # Grafik 6: İl Bazında Alınan ve Verilen Göç — Dumbbell Chart
-#           Net göç farkı en büyük 20 il, net göça göre sıralı
+#           En fazla göç alan 10 + en fazla göç veren 10 il
 # ============================================================
 # install.packages(c("ggplot2", "dplyr", "readxl", "scales", "ggtext"))
 
@@ -16,7 +16,7 @@ colnames(raw) <- c("yil", "goc_alan", "goc_veren",
                    "alan_nufus", "veren_nufus",
                    "aldigi_goc", "verdigi_goc", "net_goc")
 
-df24 <- raw %>%
+df24_full <- raw %>%
   mutate(yil = as.integer(yil)) %>%
   filter(yil == 2024) %>%
   group_by(il = goc_alan) %>%
@@ -26,12 +26,22 @@ df24 <- raw %>%
     .groups = "drop"
   ) %>%
   mutate(
-    net     = aldigi - verdigi,
-    net_abs = abs(net),
-    il      = tools::toTitleCase(tolower(il))
-  ) %>%
-  arrange(desc(net_abs)) %>%
-  slice_head(n = 20) %>%
+    net = aldigi - verdigi,
+    il  = tools::toTitleCase(tolower(il))
+  )
+
+# ── 10 ALAN + 10 VEREN ───────────────────────────────────────
+top_alan <- df24_full %>%
+  filter(net > 0) %>%
+  arrange(desc(net)) %>%
+  slice_head(n = 10)
+
+top_veren <- df24_full %>%
+  filter(net < 0) %>%
+  arrange(net) %>%
+  slice_head(n = 10)
+
+df24 <- bind_rows(top_alan, top_veren) %>%
   mutate(il = factor(il, levels = il[order(net)]))
 
 # ── GRAFİK ───────────────────────────────────────────────────
@@ -59,10 +69,10 @@ p6 <- ggplot(df24) +
   ) +
   scale_x_continuous(
     labels = label_number(scale = 1e-3, suffix = "K"),
-    expand = expansion(mult = c(0.03, 0.10))
+    expand = expansion(mult = c(0.03, 0.12))
   ) +
   labs(
-    title    = "Alınan ve Verilen Göç Farkı En Büyük 20 İl (2024)",
+    title    = "Alınan ve Verilen Göç Farkı — En Fazla Göç Alan ve Veren 10'ar İl (2024)",
     subtitle = "<span style='color:#1A6B9A;font-size:13pt'>&#9679; Alınan Göç</span>&nbsp;&nbsp;&nbsp;<span style='color:#C1392B;font-size:13pt'>&#9679; Verilen Göç</span>",
     x        = "Göç Miktarı (Kişi)",
     y        = NULL,
@@ -73,7 +83,7 @@ p6 <- ggplot(df24) +
     plot.title         = element_text(size = 15, face = "bold", hjust = 0),
     plot.subtitle      = element_markdown(size = 12, hjust = 0,
                                           margin = margin(b = 10)),
-    plot.caption       = element_text(size = 8, color = "grey55"),
+    plot.caption       = element_text(size = 8,  color = "grey55"),
     axis.text.y        = element_text(size = 13, face = "bold", color = "grey10"),
     axis.text.x        = element_text(size = 10, color = "grey20"),
     axis.title.x       = element_text(size = 11, face = "bold"),
