@@ -8,7 +8,7 @@ Veri görselleştirme dersi kapsamında hazırlanan bu çalışma, Türkiye'de i
 
 ## 📄 Poster Çalışması
 
-Posterin yüksek çözünürlüklü PDF versiyonu:
+Posterin yüksek çözünürlüklü 'Baskı PDF' versiyonu:
 
 📥 [PDF'i Aç](./Turkiye_de_ic_goc.pdf)
 
