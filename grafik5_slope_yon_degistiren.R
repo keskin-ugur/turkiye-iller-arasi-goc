@@ -1,6 +1,5 @@
 # ============================================================
 # Grafik 5: Net Göç Yön Değiştiren İller — Poster İçin Maksimum Okunabilirlik
-# Düzenleme: Türkçe Karakter (Bartın, Çankırı vb.) Hatası Giderildi
 # ============================================================
 
 library(ggplot2)
