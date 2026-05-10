@@ -1,8 +1,7 @@
 # ============================================================
 # Grafik 1: Türkiye Net Göç Hızı Choropleth Haritası (2024)
+# Düzenleme: İl İsimleri ve Temada #1e3a8a Renk Kullanımı (Hatasız)
 # ============================================================
-# install.packages(c("sf", "ggplot2", "dplyr", "readxl", "scales",
-#                    "rnaturalearth", "rnaturalearthdata", "stringi", "ggrepel"))
 
 library(sf)
 library(ggplot2)
@@ -61,13 +60,6 @@ normalize <- function(x) {
 turkey_sf$il_norm <- normalize(turkey_sf[[il_col]])
 goc$il_norm       <- normalize(goc$il)
 
-manual_fix <- c(
-  "afyon"     ~ "afyonkarahisar",
-  "k. maras"  ~ "kahramanmaras",
-  "kinkkale"  ~ "kirikkale",
-  "zinguldak" ~ "zonguldak"
-)
-
 turkey_sf <- turkey_sf %>%
   mutate(il_norm = recode(il_norm,
                           "afyon"     = "afyonkarahisar",
@@ -80,11 +72,6 @@ turkey_sf <- turkey_sf %>%
 harita <- turkey_sf %>%
   left_join(goc, by = "il_norm")
 
-eslesmeyen <- harita %>% filter(is.na(net_goc_hizi)) %>% pull(il_col)
-if (length(eslesmeyen) > 0) {
-  message("Eşleşmeyen iller: ", paste(eslesmeyen, collapse = ", "))
-}
-
 # ── 6. CENTROID KOORDİNATLARI ────────────────────────────────
 harita_label <- harita %>%
   mutate(
@@ -94,19 +81,20 @@ harita_label <- harita %>%
   ) %>%
   filter(!is.na(net_goc_hizi))
 
-# ── 7. RENK SKALI ────────────────────────────────────────────
+# ── 7. RENK SKALASI ──────────────────────────────────────────
 limit_val <- max(abs(harita$net_goc_hizi), na.rm = TRUE)
 
-# ── 8. HARİTA ────────────────────────────────────────────────
+# ── 8. HARİTA (YENİ RENKLER VE BOYUTLARLA) ───────────────────
 p <- ggplot(harita) +
   geom_sf(aes(fill = net_goc_hizi), color = "white", linewidth = 0.25) +
-  # Tüm il isimleri
+  
+  # Tüm il isimleri (#1e3a8a renginde ve daha belirgin)
   geom_text(
     data     = harita_label,
     aes(x = cx, y = cy, label = il_kisa),
-    size     = 2.8,
-    color    = "grey20",
-    fontface = "plain",
+    size     = 3.5,            
+    color    = "#1e3a8a",      
+    fontface = "bold",         
     family   = "sans"
   ) +
   scale_fill_gradient2(
@@ -119,8 +107,8 @@ p <- ggplot(harita) +
     labels   = c("-40‰", "-20‰", "-10‰", "0", "+10‰", "+20‰"),
     name     = "Net göç hızı (‰)",
     guide    = guide_colorbar(
-      barwidth       = 18,
-      barheight      = 0.6,
+      barwidth       = 20,
+      barheight      = 0.8,
       ticks          = TRUE,
       title.position = "top",
       title.hjust    = 0.5,
@@ -128,35 +116,35 @@ p <- ggplot(harita) +
     )
   ) +
   labs(
-    title    = "Türkiye İlleri Net Göç Hızı",
-    subtitle = "İller arası iç göç · 2024 · Kaynak: TÜİK",
-    caption  = "Net göç hızı = (Aldığı göç − Verdiği göç) / İl nüfusu × 1000"
+    title    = "Türkiye İlleri Net Göç Hızı (2024)",
+    subtitle = "İller arası iç göç",
+    caption  = "Kaynak: TÜİK | Net göç hızı = (Aldığı göç − Verdiği göç) / İl nüfusu × 1000"
   ) +
   theme_void(base_family = "sans") +
   theme(
-    plot.title       = element_text(size = 18, face = "bold",   hjust = 0.5,
-                                    margin = margin(b = 4)),
-    plot.subtitle    = element_text(size = 11, color = "grey40", hjust = 0.5,
-                                    margin = margin(b = 12)),
-    plot.caption     = element_text(size = 8,  color = "grey55", hjust = 0.5,
-                                    margin = margin(t = 10)),
+    # Tema metinleri de posterdeki gibi #1e3a8a yapıldı
+    plot.title       = element_text(size = 24, face = "bold", color = "#1e3a8a", hjust = 0.5, margin = margin(b = 8)),
+    plot.subtitle    = element_text(size = 16, color = "#1e3a8a", hjust = 0.5, margin = margin(b = 15)),
+    plot.caption     = element_text(size = 12, color = "#1e3a8a", hjust = 0.5, margin = margin(t = 15)),
+    
     legend.position  = "bottom",
-    legend.margin    = margin(t = 6),
-    legend.title     = element_text(size = 9, face = "bold"),
-    legend.text      = element_text(size = 8),
-    plot.margin      = margin(10, 20, 10, 10),
-    plot.background  = element_rect(fill = "white", color = NA),
-    panel.background = element_rect(fill = "white", color = NA)
+    legend.margin    = margin(t = 10),
+    legend.title     = element_text(size = 14, face = "bold", color = "#1e3a8a"),
+    legend.text      = element_text(size = 12, color = "#1e3a8a", face = "bold"),
+    
+    plot.margin      = margin(20, 20, 20, 20),
+    plot.background  = element_rect(fill = "#eef2fa", color = NA),
+    panel.background = element_rect(fill = "#eef2fa", color = NA)
   )
 
 print(p)
 
 # ── 9. KAYDET ────────────────────────────────────────────────
-ggsave("grafik1_net_goc_haritasi.png",
+ggsave("grafik1_net_goc_haritasi_poster.png",
        plot   = p,
-       width  = 14,
-       height = 7,
+       width  = 16,
+       height = 9,
        dpi    = 300,
-       bg     = "white")
+       bg     = "#eef2fa")
 
-message("✓ Grafik kaydedildi: grafik2_net_goc_haritasi.png")
+message("✓ Grafik kaydedildi: grafik1_net_goc_haritasi_poster.png")
