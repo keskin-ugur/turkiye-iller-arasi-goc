@@ -1,6 +1,16 @@
 # 🗺️ Türkiye'de İller Arası İç Göç: Kim, Nereden Nereye, Neden Gidiyor?
 
+![Poster Önizleme](./poster_preview.png)
+
 Veri görselleştirme dersi kapsamında hazırlanan bu çalışma, Türkiye'de iller arası iç göç hareketlerini farklı boyutlarıyla analiz etmektedir. TÜİK'in 2008–2024 yıllarına ait il bazlı göç verileri kullanılarak göçün yönü, nedenleri ve demografik profili görselleştirilmiştir.
+
+---
+
+## 📄 Poster Çalışması
+
+Posterin yüksek çözünürlüklü PDF versiyonu:
+
+📥 [PDF'i Aç](./Turkiye_de_ic_goc.pdf)
 
 ---
 
