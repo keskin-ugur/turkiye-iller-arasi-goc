@@ -1,6 +1,5 @@
 # ============================================================
 # Grafik 2: Türkiye İç Göç Akışları — Sankey Diyagramı (2024)
-# Poster İçin Optimize Edilmiş (#1e3a8a Metinler)
 # ============================================================
 
 library(readxl)
