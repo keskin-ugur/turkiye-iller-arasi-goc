@@ -1,9 +1,8 @@
 # ============================================================
 # Grafik 3: İl Bazlı Göç Nedeni — Sadece Alınan Göç (Top 15 il)
 # Kaynak: TÜİK İç Göç İstatistikleri, 2024
-# ============================================================
-
-# install.packages(c("ggplot2", "dplyr", "tidyr", "readxl", "forcats", "scales"))
+# Düzenleme: Devasa yazı boyutu, Türkçe Karakter ve Renk Revizyonu
+# ============================================
 
 library(ggplot2)
 library(dplyr)
@@ -11,20 +10,21 @@ library(tidyr)
 library(readxl)
 library(forcats)
 library(scales)
+library(stringr)
 
-# ── NEDEN ETİKETLERİ ─────────────────────────────────────────
+# ── NEDEN ETİKETLERİ (Türkçe Karakterli) ─────────────────────
 neden_labels <- c(
-  "tayin"    = "Tayin / Is Degisikligi",
-  "is"       = "Is Bulmak",
-  "egitim"   = "Egitim",
+  "tayin"    = "Tayin / İş Değişikliği",
+  "is"       = "İş Bulmak",
+  "egitim"   = "Eğitim",
   "medeni"   = "Evlilik / Aile",
-  "konut"    = "Daha Iyi Konut",
-  "hane"     = "Hane Bagimli Goc",
-  "donus"    = "Memlekete Donus",
-  "saglik"   = "Saglik / Bakim",
-  "ev"       = "Ev Alinmasi",
+  "konut"    = "Daha İyi Konut",
+  "hane"     = "Hane Bağımlı Göç",
+  "donus"    = "Memlekete Dönüş",
+  "saglik"   = "Sağlık / Bakım",
+  "ev"       = "Ev Alınması",
   "emekli"   = "Emeklilik",
-  "diger"    = "Diger",
+  "diger"    = "Diğer",
   "bilinmez" = "Bilinmeyen"
 )
 
@@ -44,10 +44,10 @@ alinan <- raw %>%
     !grepl("TUIK|TurkStat|sifir|zero|Gercek", il, ignore.case = TRUE)
   ) %>%
   mutate(
-    il    = trimws(il),
-    across(-il, as.numeric)
+    il = str_to_title(trimws(il), locale = "tr"), # İstanbul, İzmir vb. için Türkçe düzeltme
+    across(-il, ~as.numeric(.) %>% replace_na(0)) # Hata önlemek için boşlukları sıfır yap
   ) %>%
-  filter(!is.na(toplam))
+  filter(toplam > 0)
 
 # ── EN FAZLA GÖÇ ALAN 15 İL ──────────────────────────────────
 top15 <- alinan %>%
@@ -67,69 +67,73 @@ df3 <- alinan %>%
     il    = factor(il, levels = rev(top15))
   )
 
-# Toplam sayıyı etiket için hazırla
 toplam_df <- alinan %>%
   filter(il %in% top15) %>%
   mutate(il = factor(il, levels = rev(top15)))
 
-# ── RENK PALETİ ──────────────────────────────────────────────
+# ── RENK PALETİ (Türkçe Etiketlerle Eşleşti) ─────────────────
 neden_renk <- c(
-  "Tayin / Is Degisikligi" = "#1A6B9A",
-  "Is Bulmak"              = "#2E9EC4",
-  "Egitim"                 = "#6BAED6",
+  "Tayin / İş Değişikliği" = "#1A6B9A",
+  "İş Bulmak"              = "#2E9EC4",
+  "Eğitim"                 = "#6BAED6",
   "Evlilik / Aile"         = "#E07B54",
-  "Daha Iyi Konut"         = "#C1392B",
-  "Hane Bagimli Goc"       = "#E8A97E",
-  "Memlekete Donus"        = "#7B9E3E",
-  "Saglik / Bakim"         = "#A8C66C",
-  "Ev Alinmasi"            = "#9B6B9E",
+  "Daha İyi Konut"         = "#C1392B",
+  "Hane Bağımlı Göç"       = "#E8A97E",
+  "Memlekete Dönüş"        = "#7B9E3E",
+  "Sağlık / Bakım"         = "#A8C66C",
+  "Ev Alınması"            = "#9B6B9E",
   "Emeklilik"              = "#C9A0DC",
-  "Diger"                  = "#888888",
+  "Diğer"                  = "#888888",
   "Bilinmeyen"             = "#CCCCCC"
 )
 
 # ── GRAFİK ───────────────────────────────────────────────────
 p3 <- ggplot(df3, aes(x = sayi, y = il, fill = neden)) +
-  geom_col(width = 0.7) +
-  # Toplam sayı etiketi çubuğun sağına
+  geom_col(width = 0.8) +
   geom_text(data = toplam_df,
             aes(x = toplam, y = il,
                 label = paste0(format(round(toplam / 1000), big.mark = "."), "K")),
             inherit.aes = FALSE,
-            hjust = -0.15, size = 3.2, fontface = "bold", color = "grey20") +
-  scale_fill_manual(values = neden_renk, name = "Goc Nedeni") +
+            hjust = -0.15, size = 8, fontface = "bold", color = "#1e3a8a") +
+  scale_fill_manual(values = neden_renk, name = "Göç Nedenleri") +
   scale_x_continuous(labels = label_number(scale = 1e-3, suffix = "K"),
-                     expand = expansion(mult = c(0, 0.08))) +
+                     expand = expansion(mult = c(0, 0.15))) +
   labs(
-    title    = "Il Bazli Alinan Goc Nedenleri — En Fazla Goc Alan 15 Il",
-    subtitle = "Iller arasi ic goc · 2024 · Kaynak: TUIK",
-    x        = "Kisi Sayisi",
+    title    = "İL BAZLI ALINAN GÖÇ NEDENLERİ (2024)",
+    subtitle = "En Fazla Göç Alan 15 İl - Neden Dağılımı",
+    x        = "Göç Miktarı (Kişi)",
     y        = NULL,
-    caption  = "Alinan gocun neden dagilimi il bazinda"
+    caption  = "Kaynak: TÜİK"
   ) +
-  theme_minimal(base_family = "sans", base_size = 11) +
+  theme_minimal(base_family = "sans") +
   theme(
-    plot.title         = element_text(size = 15, face = "bold", hjust = 0),
-    plot.subtitle      = element_text(size = 9, color = "grey10", hjust = 0,
-                                      margin = margin(b = 10)),
-    plot.caption       = element_text(size = 8, color = "grey20"),
-    axis.text.y        = element_text(size = 12, face = "bold", color = "grey10"),
-    axis.text.x        = element_text(size = 9),
+    # Tüm metin renkleri #1e3a8a yapıldı
+    text               = element_text(color = "#1e3a8a"),
+    plot.title         = element_text(size = 36, face = "bold", hjust = 0, color = "#1e3a8a"),
+    plot.subtitle      = element_text(size = 22, color = "#1e3a8a", hjust = 0, margin = margin(b = 20)),
+    plot.caption       = element_text(size = 16, color = "#1e3a8a"),
+    
+    # İl isimleri ve rakamlar dev boyuta çıkarıldı
+    axis.text.y        = element_text(size = 26, face = "bold", color = "#1e3a8a"),
+    axis.text.x        = element_text(size = 18, face = "bold", color = "#1e3a8a"),
+    axis.title.x       = element_text(size = 20, color = "#1e3a8a", face = "bold", margin = margin(t = 15)),
+    
     legend.position    = "bottom",
-    legend.title       = element_text(size = 9, face = "bold"),
-    legend.text        = element_text(size = 8),
-    legend.key.size    = unit(0.4, "cm"),
+    # Gösterge başlığı ve metni büyütüldü
+    legend.title       = element_text(size = 22, face = "bold", color = "#1e3a8a"),
+    legend.text        = element_text(size = 18, color = "#1e3a8a"),
+    
+    legend.key.size    = unit(1.2, "cm"),
     panel.grid.major.y = element_blank(),
     panel.grid.minor   = element_blank(),
-    plot.background    = element_rect(fill = "white", color = NA),
-    panel.background   = element_rect(fill = "white", color = NA),
-    plot.margin        = margin(15, 15, 10, 10)
+    plot.background    = element_rect(fill = "#eef2fa", color = NA),
+    panel.background   = element_rect(fill = "#eef2fa", color = NA),
+    plot.margin        = margin(30, 40, 30, 30)
   ) +
   guides(fill = guide_legend(nrow = 3, byrow = TRUE))
 
 print(p3)
 
 # ── KAYDET ───────────────────────────────────────────────────
-ggsave("grafik3_il_neden.png",
-       plot = p3, width = 12, height = 9, dpi = 300, bg = "white")
-message("grafik3_il_neden.png kaydedildi")
+ggsave("grafik3_il_neden_dev_poster.png",
+       plot = p3, width = 20, height = 14, dpi = 300, bg = "#eef2fa")
