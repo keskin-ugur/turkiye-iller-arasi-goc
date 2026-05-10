@@ -1,7 +1,5 @@
 # ============================================================
 # Grafik 3: İl Bazlı Göç Nedeni — Sadece Alınan Göç (Top 15 il)
-# Kaynak: TÜİK İç Göç İstatistikleri, 2024
-# Düzenleme: Devasa yazı boyutu, Türkçe Karakter ve Renk Revizyonu
 # ============================================
 
 library(ggplot2)
