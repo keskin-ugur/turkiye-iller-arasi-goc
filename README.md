@@ -43,8 +43,8 @@ install.packages(c(
 
 Tüm veriler **TÜİK (Türkiye İstatistik Kurumu)**'ten alınmıştır.
 
-🔗 [https://veriportali.tuik.gov.tr/tr/press/54082](İç Göç İstatistikleri, 2024)
-🔗 [https://nip.tuik.gov.tr/?value=IllerArasiGoc](İller Arası Göç)
+🔗 [[Tıklayınız, TÜİK](https://veriportali.tuik.gov.tr/tr/press/54082)](İç Göç İstatistikleri, 2024)
+🔗 [[Tıklayınız,TÜİK](https://nip.tuik.gov.tr/?value=IllerArasiGoc)](İller Arası Göç)
 
 Kullanılan veri setleri:
 
