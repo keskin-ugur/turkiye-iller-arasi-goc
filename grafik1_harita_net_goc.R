@@ -1,6 +1,5 @@
 # ============================================================
 # Grafik 1: Türkiye Net Göç Hızı Choropleth Haritası (2024)
-# Düzenleme: İl İsimleri ve Temada #1e3a8a Renk Kullanımı (Hatasız)
 # ============================================================
 
 library(sf)
