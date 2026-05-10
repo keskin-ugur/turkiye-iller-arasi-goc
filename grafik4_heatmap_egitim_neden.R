@@ -1,7 +1,6 @@
 # ============================================================
-# Grafik 4: Göç Nedeni × Eğitim Durumu Heatmap
+# Grafik 4: Göç Nedeni × Eğitim Durumu Heatmap — Poster Nihai
 # ============================================================
-# install.packages(c("ggplot2", "dplyr", "tidyr", "readxl", "forcats"))
 
 library(ggplot2)
 library(dplyr)
@@ -9,7 +8,7 @@ library(tidyr)
 library(readxl)
 library(forcats)
 
-# ── VERİ ─────────────────────────────────────────────────────
+# ── 1. VERİ OKUMA VE TEMİZLİK ────────────────────────────────
 raw4 <- read_excel(
   "goc_etme_nedeni_ve_bitirilen_egitim_durumuna_gore iller_arasi_goc_eden_nufus.xls",
   col_names = FALSE, skip = 3
@@ -28,7 +27,7 @@ df4_raw <- raw4 %>%
   mutate(across(-neden, as.numeric)) %>%
   filter(!is.na(toplam))
 
-# ── NEDEN ETİKETLERİ ─────────────────────────────────────────
+# Etiket Düzenlemeleri
 df4_raw <- df4_raw %>%
   mutate(neden_kisa = case_when(
     grepl("Tayin|Assignation",  neden) ~ "Tayin / İş Değişikliği",
@@ -49,7 +48,6 @@ neden_sira <- c(
   "Memlekete Dönüş", "Sağlık / Bakım", "Ev Alınması"
 )
 
-# ── EĞİTİM ETİKETLERİ ────────────────────────────────────────
 egitim_labels <- c(
   "okuma_yok" = "Okuma Yazma\nBilmeyen",
   "okuma_var" = "Diplomasız\nOkuryazar",
@@ -59,7 +57,7 @@ egitim_labels <- c(
   "yuksek"    = "Yükseköğretim"
 )
 
-# ── LONG FORMAT + SATIR İÇİ YÜZDE ────────────────────────────
+# Long Format ve Yüzde Hesaplama
 df4 <- df4_raw %>%
   select(neden_kisa, all_of(names(egitim_labels))) %>%
   pivot_longer(cols = -neden_kisa,
@@ -74,53 +72,50 @@ df4 <- df4_raw %>%
     egitim     = factor(egitim, levels = unname(egitim_labels))
   )
 
-# ── GRAFİK ───────────────────────────────────────────────────
+# ── 2. GRAFİK TASARIMI (TÜM YAZILAR #1E3A8A) ────────────────
 p4 <- ggplot(df4, aes(x = egitim, y = fct_rev(neden_kisa), fill = pct)) +
-  geom_tile(color = "white", linewidth = 0.5) +
+  geom_tile(color = "white", linewidth = 0.8) +
+  # Kutucuk içi yüzdeler: Yüksek değerler beyaz, düşük değerler #1e3a8a
   geom_text(aes(label = paste0(round(pct, 1), "%"),
-                color  = ifelse(pct > 35, "white", "grey20")),
-            size = 3.5, fontface = "bold") +
+                color  = ifelse(pct > 35, "white", "#1e3a8a")),
+            size = 6, fontface = "bold") +
   scale_fill_gradient2(
     low      = "#F7F4F0",
     mid      = "#6BAED6",
     high     = "#08306B",
     midpoint = 25,
-    name     = "Satır İçi\nPay (%)",
-    guide = guide_colorbar(
-      barwidth       = 10,
-      barheight      = 0.6,
-      title.position = "top",
-      title.hjust    = 0.5,
-      direction      = "horizontal"
-    )
+    name     = "Pay (%)",
+    guide = guide_colorbar(barwidth = 1, barheight = 15, title.position = "top", title.hjust = 0.5)
   ) +
   scale_color_identity() +
   labs(
-    title    = "Göç Nedeni × Eğitim Durumu",
-    subtitle = "Her nedenin eğitim dağılımı (satır içi yüzde) · 2024 · Kaynak: TÜİK",
+    title    = "GÖÇ NEDENİ × EĞİTİM DURUMU",
+    subtitle = "Her nedenin eğitim düzeyine göre dağılımı (Satır içi yüzde) · 2024",
     x        = NULL,
     y        = NULL,
-    caption  = "Renkler her göç nedeni içindeki eğitim payını göstermektedir"
+    caption  = "Kaynak: TÜİK · Renk koyuluğu ilgili neden içindeki eğitim payını temsil eder."
   ) +
-  theme_minimal(base_family = "sans", base_size = 11) +
+  theme_minimal(base_family = "sans") +
   theme(
-    plot.title       = element_text(size = 15, face = "bold", hjust = 0),
-    plot.subtitle    = element_text(size = 9,  color = "grey40", hjust = 0,
-                                    margin = margin(b = 10)),
-    plot.caption     = element_text(size = 8,  color = "grey55"),
-    axis.text.x      = element_text(size = 12, face = "bold", hjust = 0.5, color = "grey10"),
-    axis.text.y      = element_text(size = 12, face = "bold", hjust = 1,   color = "grey10"),
-    legend.position  = "bottom",
-    legend.title     = element_text(size = 9, face = "bold"),
+    # Başlık ve Alt Başlık (#1e3a8a)
+    plot.title       = element_text(size = 28, face = "bold", color = "#1e3a8a"),
+    plot.subtitle    = element_text(size = 16, color = "#1e3a8a", margin = margin(b = 20)),
+    plot.caption     = element_text(size = 12, color = "#1e3a8a"),
+    
+    # Eksen Yazıları (#1e3a8a ve Büyük)
+    axis.text.x      = element_text(size = 16, face = "bold", color = "#1e3a8a", margin = margin(t = 10)),
+    axis.text.y      = element_text(size = 16, face = "bold", color = "#1e3a8a"),
+    
+    # Lejant (#1e3a8a)
+    legend.title     = element_text(size = 14, face = "bold", color = "#1e3a8a"),
+    legend.text      = element_text(size = 12, color = "#1e3a8a"),
+    
     panel.grid       = element_blank(),
-    plot.background  = element_rect(fill = "white", color = NA),
-    panel.background = element_rect(fill = "white", color = NA),
-    plot.margin      = margin(15, 15, 10, 10)
+    plot.background  = element_rect(fill = "#eef2fa", color = NA),
+    panel.background = element_rect(fill = "#eef2fa", color = NA),
+    plot.margin      = margin(30, 30, 30, 30)
   )
 
-print(p4)
-
-# ── KAYDET ───────────────────────────────────────────────────
-ggsave("grafik4_heatmap_egitim_neden.png",
-       plot = p4, width = 11, height = 7, dpi = 300, bg = "white")
-message("grafik4_heatmap_egitim_neden.png kaydedildi")
+# ── 3. KAYDET ────────────────────────────────────────────────
+ggsave("grafik4_heatmap_poster.png",
+       plot = p4, width = 16, height = 11, dpi = 300, bg = "#eef2fa")
