@@ -70,11 +70,11 @@ Kullanılan veri setleri:
 ## 🤝 Team Members
 
 ### Uğur Keskin
-- GitHub: github.com/keskin-ugur
-- LinkedIn: linkedin.com/in/keskin-ugur/
+- GitHub: [github.com/keskin-ugur](github.com/keskin-ugur)
+- LinkedIn: [linkedin.com/in/keskin-ugur/](linkedin.com/in/keskin-ugur/)
 - E-mail: ugur3774keskin@gmail.com
 
 ### Mehmet Yiğit Çağlayan
-- GitHub: github.com/yigitcaglayan
+- GitHub: [github.com/yigitcaglayan](github.com/yigitcaglayan)
 - LinkedIn: 
 - E-mail: yigitcaglayan555@gmail.com
