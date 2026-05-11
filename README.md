@@ -69,12 +69,12 @@ Kullanılan veri setleri:
 
 ## 🤝 Hakkımızda
 
-#### Uğur Keskin
+### Uğur Keskin
 - GitHub: [github.com/keskin-ugur](https://www.github.com/keskin-ugur)
 - LinkedIn: [linkedin.com/in/keskin-ugur/](https://www.linkedin.com/in/keskin-ugur/)
 - E-mail: ugur3774keskin@gmail.com
 
-#### Mehmet Yiğit Çağlayan
+### Mehmet Yiğit Çağlayan
 - GitHub: [github.com/yigitcaglayan](https://www.github.com/yigitcaglayan)
 - LinkedIn: —
 - E-mail: yigitcaglayan555@gmail.com
