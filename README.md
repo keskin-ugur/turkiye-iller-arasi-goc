@@ -76,5 +76,5 @@ Kullanılan veri setleri:
 
 ### Mehmet Yiğit Çağlayan
 - GitHub: [github.com/yigitcaglayan](https://www.github.com/yigitcaglayan)
-- LinkedIn: 
+- LinkedIn: —
 - E-mail: yigitcaglayan555@gmail.com
