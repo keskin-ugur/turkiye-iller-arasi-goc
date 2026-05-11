@@ -67,7 +67,7 @@ Kullanılan veri setleri:
 
 ---
 
-## Team Members
+## 🤝 Team Members
 
 ### Uğur Keskin
 - GitHub: github.com/keskin-ugur
