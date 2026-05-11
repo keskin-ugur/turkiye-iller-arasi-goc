@@ -67,7 +67,7 @@ Kullanılan veri setleri:
 
 ---
 
-## 🤝 Team Members
+## 🤝 Hakkımızda
 
 ### Uğur Keskin
 - GitHub: [github.com/keskin-ugur](https://www.github.com/keskin-ugur)
@@ -78,3 +78,5 @@ Kullanılan veri setleri:
 - GitHub: [github.com/yigitcaglayan](https://www.github.com/yigitcaglayan)
 - LinkedIn: —
 - E-mail: yigitcaglayan555@gmail.com
+
+### Danışman: Doç. Dr. Volkan Soner Özsoy
