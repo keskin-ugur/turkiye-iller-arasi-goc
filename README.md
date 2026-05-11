@@ -67,6 +67,14 @@ Kullanılan veri setleri:
 
 ---
 
-## 👥 Hazırlayanlar
+## Team Members
 
-**Uğur Keskin** & **Mehmet Yiğit Çağlayan**
+### Uğur Keskin
+- GitHub: github.com/keskin-ugur
+- LinkedIn: linkedin.com/in/keskin-ugur/
+- E-mail: ugur3774keskin@gmail.com
+
+### Mehmet Yiğit Çağlayan
+- GitHub: github.com/yigitcaglayan
+- LinkedIn: 
+- E-mail: yigitcaglayan555@gmail.com
